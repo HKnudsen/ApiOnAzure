@@ -25,6 +25,12 @@ namespace ApiOnAzure.Data
             return dbConnection.QuerySingle<T>(sql);
         }
 
+        public bool ExecuteSqlWithParameters(string sql, DynamicParameters sqlParameters)
+        {
+            IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            return dbConnection.Execute(sql, sqlParameters) > 0;
+        }
+
          
     }
 }

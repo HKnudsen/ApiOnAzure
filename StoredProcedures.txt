@@ -1,0 +1,37 @@
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spUser_Upsert
+    @FirstName NVARCHAR(50),
+    @LastName NVARCHAR(50),
+    @Email NVARCHAR(50),
+    @Gender NVARCHAR(50),
+    @UserId INT = NULL
+AS
+BEGIN
+    IF NOT EXISTS (SELECT * FROM ApiOnAzureSchema.Users WHERE UserId = @UserId)
+        BEGIN
+        IF NOT EXISTS (SELECT * FROM ApiOnAzureSchema.Users WHERE Email = @Email)
+            BEGIN
+
+                INSERT INTO ApiOnAzureSchema.Users(
+                    [FirstName],
+                    [LastName],
+                    [Email],
+                    [Gender]
+                ) VALUES (
+                    @FirstName,
+                    @LastName,
+                    @Email,
+                    @Gender
+                )
+            END
+        END
+    ELSE
+        BEGIN
+        UPDATE ApiOnAzureSchema.Users
+            SET FirstName = @FirstName,
+                LastName = @LastName,
+                Email = @Email,
+                Gender = @Gender
+            WHERE UserId = @UserId
+        END
+END
+GO
