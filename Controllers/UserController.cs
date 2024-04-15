@@ -48,9 +48,34 @@ public class UserController: ControllerBase
             return Ok();
         }
         throw new Exception("Failed to Upsert User");
-
-        
     }
 
+    [HttpGet("GetUsers/{userId}")]
+    public IEnumerable<User> GetUsers(int userId)
+    {
+        string sql = "EXEC ApiOnAzureSchema.spGet_Users";
+        DynamicParameters sqlParameters = new DynamicParameters();
 
+        if (userId != 0)
+        {
+            sql += " @UserId = @UserIdParameter";
+            sqlParameters.Add("@UserIdParameter", userId, DbType.Int32);
+        }
+
+        return _dataContext.LoadDataWithParameters<User>(sql, sqlParameters);
+    }
+
+    [HttpDelete("DeleteUser/{userId}")]
+    public IActionResult DeleteUser(int userId)
+    {
+        string sql = "EXEC ApiOnAzureSchema.DeleteUser @UserId = @UserIdParameter";
+        DynamicParameters sqlParameters = new DynamicParameters();
+        sqlParameters.Add("UserIdParameter", userId, DbType.Int32);
+
+        if(_dataContext.ExecuteSqlWithParameters(sql, sqlParameters))
+        {
+            return Ok();
+        }
+        throw new Exception("Failed to Delete User");
+    }
 }

@@ -35,3 +35,22 @@ BEGIN
         END
 END
 GO
+
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spGet_Users
+    @UserId INT = NULL
+AS
+BEGIN
+    SELECT [Users].[UserId],
+    [Users].[FirstName],
+    [Users].[LastName],
+    [Users].[Email],
+    [Users].[Gender],
+    [Orders].[OrderId],
+    [Orders].[StaffId],
+    [Orders].[Price],
+    [Orders].[Treatment]
+    FROM ApiOnAzureSchema.Users as Users
+        LEFT JOIN ApiOnAzureSchema.Orders AS Orders
+            ON Orders.UserId = Users.UserId
+END
+GO
