@@ -40,17 +40,49 @@ CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spGet_Users
     @UserId INT = NULL
 AS
 BEGIN
-    SELECT [Users].[UserId],
-    [Users].[FirstName],
-    [Users].[LastName],
-    [Users].[Email],
-    [Users].[Gender],
-    [Orders].[OrderId],
-    [Orders].[StaffId],
-    [Orders].[Price],
-    [Orders].[Treatment]
-    FROM ApiOnAzureSchema.Users as Users
-        LEFT JOIN ApiOnAzureSchema.Orders AS Orders
-            ON Orders.UserId = Users.UserId
+    SELECT * FROM ApiOnAzureSchema.Users
+        WHERE UserId = ISNULL(@UserId, UserId)
+END
+GO
+
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.DeleteUser
+    @UserId INT
+AS
+BEGIN
+    DELETE FROM ApiOnAzureSchema.Users WHERE UserId = @UserId
+    DELETE FROM ApiOnAzureSchema.Orders WHERE UserId = @UserId
+END
+
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spUpsert_Order
+    @OrderId INT = NULL,
+    @UserId INT,
+    @StaffId NVARCHAR(50),
+    @Treatment NVARCHAR(50),
+    @Price DECIMAL
+AS
+BEGIN
+    IF NOT EXISTS(SELECT * FROM ApiOnAzureSchema.Orders WHERE OrderId = @OrderId)
+        BEGIN
+        INSERT INTO ApiOnAzureSchema.Orders(
+            [UserId],
+            [StaffId],
+            [Treatment],
+            [Price]
+        ) VALUES (
+            @UserId,
+            @StaffId,
+            @Treatment,
+            @Price
+        )
+        END
+    ELSE
+        BEGIN
+            UPDATE ApiOnAzureSchema.Orders
+                SET UserId = @UserId,
+                StaffId = @StaffId,
+                Treatment = @Treatment,
+                Price = @Price
+            WHERE OrderId = @OrderId
+        END
 END
 GO

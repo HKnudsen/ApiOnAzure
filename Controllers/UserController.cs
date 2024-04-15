@@ -14,7 +14,6 @@ public class UserController: ControllerBase
 
     public UserController(IConfiguration config)
     {
-        
         _dataContext = new DataContext(config);
     }
 
@@ -61,7 +60,6 @@ public class UserController: ControllerBase
             sql += " @UserId = @UserIdParameter";
             sqlParameters.Add("@UserIdParameter", userId, DbType.Int32);
         }
-
         return _dataContext.LoadDataWithParameters<User>(sql, sqlParameters);
     }
 
