@@ -39,6 +39,37 @@ namespace ApiOnAzure.Controllers
             }
             throw new Exception("Failed to Upsert Staff");
         }
-        
+
+        [HttpGet("GetStaff/{staffId}")]
+        public IEnumerable<Staff> GetStaff(int staffId)
+        {
+            string sql = "EXEC ApiOnAzureSchema.spGet_Staff";
+            DynamicParameters sqlParameter = new DynamicParameters();
+
+            if (staffId != 0)
+            {
+                sql += "@StaffId = @StaffIdParameter";
+                sqlParameter.Add("@StaffIdParameter", staffId, DbType.Int32);
+            }
+
+            return _dataContext.LoadDataWithParameters<Staff>(sql, sqlParameter);
+        }
+
+        [HttpDelete("DeleteStaff/{staffId}")]
+        public IActionResult DeleteStaff(int staffId)
+        {
+            string sql = @"EXEC AppOnAzureSchema.spStaff_Delete
+                @StaffId = @StaffIdParameter  
+            ";
+
+            DynamicParameters sqlParameters = new DynamicParameters();
+            sqlParameters.Add("@StaffIdParameter", staffId, DbType.Int32);
+
+            if(_dataContext.ExecuteSqlWithParameters(sql, sqlParameters))
+            {
+                return Ok();
+            }
+            throw new Exception("Failed to delete Staff");
+        }
     }
 }

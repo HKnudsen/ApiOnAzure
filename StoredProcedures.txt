@@ -86,3 +86,60 @@ BEGIN
         END
 END
 GO
+
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spUpsert_Staff
+    @FirstName NVARCHAR(50),
+    @LastName NVARCHAR(50),
+    @AccountNumber INT,
+    @StaffId INT = NULL
+AS
+BEGIN
+    IF NOT EXISTS(SELECT * FROM ApiOnAzureSchema.Staff WHERE StaffId = @StaffId)
+        BEGIN
+            INSERT INTO ApiOnAzureSchema.Staff(
+                [FirstName],
+                [LastName],
+                [AccountNumber]
+            ) VALUES (
+                @FirstName,
+                @LastName,
+                @AccountNumber
+            )
+        END
+    ELSE
+        BEGIN
+            UPDATE ApiOnAzureSchema.Staff
+                SET FirstName = @FirstName,
+                LastName = @LastName,
+                AccountNumber = @AccountNumber
+            WHERE StaffId = @StaffId
+        END
+END
+GO
+
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spGet_Staff
+    @StaffId INT = NULL
+AS
+BEGIN
+    SELECT * FROM ApiOnAzureSchema.Staff
+    WHERE StaffId = ISNULL(@StaffId, StaffId)
+END
+GO
+
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spStaff_Delete
+    @StaffId INT
+AS
+BEGIN
+    DELETE FROM ApiOnAzureSchema.Staff
+        WHERE StaffId = @StaffId
+END
+GO
+
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spGet_Orders
+    @OrderId INT = NULL
+AS
+BEGIN
+    SELECT * FROM ApiOnAzureSchema.Orders
+     WHERE OrderId = ISNULL(@OrderId, OrderId)
+END
+GO
