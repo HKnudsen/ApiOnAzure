@@ -1,4 +1,5 @@
 using ApiOnAzure.Data;
+using ApiOnAzure.Dtos;
 using ApiOnAzure.Models;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
@@ -55,10 +56,20 @@ namespace ApiOnAzure.Controllers
             return _dataContext.LoadDataWithParameters<Order>(sql, sqlParameters);
         }
 
+        [HttpGet("GetOrdersForUserId/{userId}")]
+        public IEnumerable<OrderForUserDto> GetOrdersForUser(int userId)
+        {
+            string sql = "EXEC ApiOnAzureSchema.spGet_Orders_For_User @UserId = @UserIdParameter";
+            DynamicParameters sqlParameters = new DynamicParameters();
+            sqlParameters.Add("@UserIdParameter", userId, DbType.Int32);
+
+            return _dataContext.LoadDataWithParameters<OrderForUserDto>(sql, sqlParameters);
+        }
+
         [HttpDelete("DeleteOrder/{orderId}")]
         public IActionResult DeleteOrder(int orderId)
         {
-            string sql = "EXEC ApiOnAzure.spDelete_Order @OrderId = @OrderIdParameter";
+            string sql = "EXEC ApiOnAzureSchema.spDelete_Order @OrderId = @OrderIdParameter";
             DynamicParameters sqlParameters = new DynamicParameters();
             sqlParameters.Add("@OrderIdParameter", orderId, DbType.Int32);
 
