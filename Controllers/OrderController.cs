@@ -66,6 +66,16 @@ namespace ApiOnAzure.Controllers
             return _dataContext.LoadDataWithParameters<OrderForUserDto>(sql, sqlParameters);
         }
 
+        [HttpGet("GetOrdersForStaffId/{staffId}")]
+        public IEnumerable<OrderForStaffDto> GetOrdersForStaff(int staffId)
+        {
+            string sql = "EXEC ApiOnAzureSchema.spGet_Orders_For_Staff @StaffId = @StaffIdParameter";
+            DynamicParameters sqlParameters = new DynamicParameters();
+            sqlParameters.Add("@StaffIdParameter", staffId, DbType.Int32);
+
+            return _dataContext.LoadDataWithParameters<OrderForStaffDto>(sql, sqlParameters);
+        }
+
         [HttpDelete("DeleteOrder/{orderId}")]
         public IActionResult DeleteOrder(int orderId)
         {

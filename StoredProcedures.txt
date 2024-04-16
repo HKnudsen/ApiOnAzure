@@ -143,3 +143,24 @@ BEGIN
      WHERE OrderId = ISNULL(@OrderId, OrderId)
 END
 GO
+
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spDelete_Order
+    @OrderId INT
+AS
+BEGIN
+    DELETE FROM ApiOnAzureSchema.Orders
+        WHERE OrderId = @OrderId
+END
+GO
+
+CREATE OR ALTER PROCEDURE ApiOnAzureSchema.spGet_Orders_For_Staff
+    @StaffId INT
+AS
+BEGIN
+    SELECT [OrderId],
+    [UserId],
+    [Treatment],
+    [Price] FROM ApiOnAzureSchema.Orders
+        WHERE StaffId = @StaffId
+END
+GO
