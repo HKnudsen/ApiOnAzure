@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ApiOnAzure.props" />
+</Project>

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "TYA7DKIltUvz8TLgfbfbp9W5Q1fCK8oNl2vMQKso7/4=",
+  "Source": "ApiOnAzure",
+  "BasePath": "_content/ApiOnAzure",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
